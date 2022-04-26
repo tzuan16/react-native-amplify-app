@@ -8,15 +8,24 @@ import AppButton from "../components/AppButton";
 
 export default SignIn = () => {
   const [email, setEmail] = useState("");
+  const [number, setNumber] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
-  const signIn = async () => {
+  const signUp = async () => {
     try {
-      const user = await Auth.signIn(email, password);
-      navigation.navigate("Home");
+      const user = await Auth.signUp({
+        username: email,
+        password,
+        attributes: {
+          email,
+          phone_number: "+1" + number,
+        },
+      });
+      console.log(user);
+      // navigation.navigate("Home");
     } catch (error) {
-      console.log("error signing in", error);
+      console.log("error signing up", error);
     }
   };
 
@@ -28,8 +37,17 @@ export default SignIn = () => {
         onChangeText={setEmail}
         placeholder="輸入Email"
         autoCapitalize="none"
-        textContentType="emailAddress"
+        textContentType="username"
         leftIcon="account"
+      />
+      <AppTextInput
+        value={number}
+        onChangeText={setNumber}
+        placeholder="輸入電話"
+        autoCapitalize="none"
+        textContentType="telephoneNumber"
+        keyboardType="number-pad"
+        leftIcon="cellphone"
       />
       <AppTextInput
         value={password}
@@ -40,10 +58,18 @@ export default SignIn = () => {
         textContentType="password"
         leftIcon="lock"
       />
-      <AppButton title="登入" onPress={signIn} />
+      {/* <AppTextInput
+        value={password}
+        onChangeText={setPassword}
+        placeholder="再次輸入密碼"
+        autoCapitalize="none"
+        secureTextEntry
+        leftIcon="lock"
+      /> */}
+      <AppButton title="註冊" onPress={signUp} />
       <View style={styles.footerButtonContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-          <Text style={styles.forgotPasswordButtonText}>沒有帳號？註冊</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+          <Text style={styles.forgotPasswordButtonText}>已有帳號？登入</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
