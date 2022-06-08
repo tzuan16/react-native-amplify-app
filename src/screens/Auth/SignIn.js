@@ -1,31 +1,22 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Auth } from "aws-amplify";
-import AppTextInput from "../components/AppTextInput";
+import AppTextInput from "../../components/AppTextInput";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AppButton from "../components/AppButton";
+import AppButton from "../../components/AppButton";
 
 export default SignIn = () => {
   const [email, setEmail] = useState("");
-  const [number, setNumber] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
-  const signUp = async () => {
+  const signIn = async () => {
     try {
-      const user = await Auth.signUp({
-        username: email,
-        password,
-        attributes: {
-          email,
-          phone_number: "+1" + number,
-        },
-      });
-      console.log(user);
-      // navigation.navigate("Home");
+      const user = await Auth.signIn(email, password);
+      navigation.navigate("Home");
     } catch (error) {
-      console.log("error signing up", error);
+      console.log("error signing in", error);
     }
   };
 
@@ -37,17 +28,8 @@ export default SignIn = () => {
         onChangeText={setEmail}
         placeholder="輸入Email"
         autoCapitalize="none"
-        textContentType="username"
+        textContentType="emailAddress"
         leftIcon="account"
-      />
-      <AppTextInput
-        value={number}
-        onChangeText={setNumber}
-        placeholder="輸入電話"
-        autoCapitalize="none"
-        textContentType="telephoneNumber"
-        keyboardType="number-pad"
-        leftIcon="cellphone"
       />
       <AppTextInput
         value={password}
@@ -58,18 +40,10 @@ export default SignIn = () => {
         textContentType="password"
         leftIcon="lock"
       />
-      {/* <AppTextInput
-        value={password}
-        onChangeText={setPassword}
-        placeholder="再次輸入密碼"
-        autoCapitalize="none"
-        secureTextEntry
-        leftIcon="lock"
-      /> */}
-      <AppButton title="註冊" onPress={signUp} />
+      <AppButton title="登入" onPress={signIn} />
       <View style={styles.footerButtonContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
-          <Text style={styles.forgotPasswordButtonText}>已有帳號？登入</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+          <Text style={styles.forgotPasswordButtonText}>沒有帳號？註冊</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
